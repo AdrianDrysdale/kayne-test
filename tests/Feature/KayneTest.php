@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\ApiToken;
+use App\Models\Quote;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -12,8 +13,9 @@ class KayneTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testTokenAuthorisationWorks(): void
+    protected function setUp(): void
     {
+        parent::setUp();
         Http::fake([
             'https://api.kanye.rest' => Http::sequence()
                 ->push(['quote' => 'quote 1'])
@@ -24,12 +26,33 @@ class KayneTest extends TestCase
                 ->push(['quote' => 'quote 6'])
         ]);
 
+    }
+
+    public function testFiveRandomQuotesReturned(): void
+    {
+        $response = $this->get('/api/kayne?api_token='. $this->createToken());
+        $response->assertStatus(200);
+        $this->assertCount(5, json_decode($response->getContent()));
+    }
+
+    public function testQuotesAreCached(): void {
+
+        Quote::create(['quote' => 'Cache Quote']);
+        $response = $this->get('/api/kayne?api_token='. $this->createToken());
+        $this->assertEquals(['Cache Quote'], json_decode($response->getContent()));
+    }
+
+    public function testQuotesAreRefreshed(): void {
+
+        Quote::create(['quote' => 'Cache Quote']);
+        $response = $this->get('/api/kayne/fresh?api_token='. $this->createToken());
+        $response->assertStatus(200);
+        $this->assertCount(5, json_decode($response->getContent()));
+    }
+
+    private function createToken(): string {
         $token = Str::random(60);
         ApiToken::create([ 'api_token' => hash('sha256', $token)]);
-        $response = $this->get('/api/kayne?api_token='. $token);
-
-        $response->assertStatus(200);
-        $this->assertEquals(5, count(json_decode($response->getContent())));
-
+        return $token;
     }
 }
