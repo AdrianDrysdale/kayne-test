@@ -13,5 +13,6 @@ class GenerateTokenTest extends TestCase
     {
         $this->artisan('make:apiToken')
             ->expectsOutputToContain('Token')
-            ->assertExitCode(0);    }
+            ->assertExitCode(0);
+    }
 }

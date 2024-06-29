@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\Http;
 
 class Kayne extends Controller
 {
-    public function index() {
+    public function index()
+    {
 
         $quotes = [];
 
