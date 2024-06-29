@@ -24,7 +24,8 @@ class Kayne extends Controller
         return response()->json($quotes);
     }
 
-    public function fresh() {
+    public function fresh()
+    {
         Quote::truncate();
         return $this->index();
     }
