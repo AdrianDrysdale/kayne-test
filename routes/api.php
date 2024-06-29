@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Kayne;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('auth:api')->get('/test', function (Request $request) {
-    return 'Authenticated!';
-});
+Route::middleware('auth:api')->get('/kayne', [Kayne::class, 'index']);
