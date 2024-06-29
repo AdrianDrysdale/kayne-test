@@ -29,7 +29,7 @@ class GenerateAuthToken extends Command
     {
         $token = Str::random(60);
         ApiToken::create([ 'api_token' => hash('sha256', $token)]);
-        $this->info($token);
+        $this->info('Token: '.$token);
         return 0;
     }
 }
