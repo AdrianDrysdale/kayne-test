@@ -13,6 +13,8 @@ class KayneTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected string $token;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -26,11 +28,13 @@ class KayneTest extends TestCase
                 ->push(['quote' => 'quote 6'])
         ]);
 
+        $this->token = Str::random(60);
+        ApiToken::create([ 'api_token' => hash('sha256', $this->token)]);
     }
 
     public function testFiveRandomQuotesReturned(): void
     {
-        $response = $this->get('/api/kayne?api_token='. $this->createToken());
+        $response = $this->get('/api/kayne?api_token='. $this->token);
         $response->assertStatus(200);
         $this->assertCount(5, json_decode($response->getContent()));
     }
@@ -38,21 +42,15 @@ class KayneTest extends TestCase
     public function testQuotesAreCached(): void {
 
         Quote::create(['quote' => 'Cache Quote']);
-        $response = $this->get('/api/kayne?api_token='. $this->createToken());
+        $response = $this->get('/api/kayne?api_token='. $this->token);
         $this->assertEquals(['Cache Quote'], json_decode($response->getContent()));
     }
 
     public function testQuotesAreRefreshed(): void {
 
         Quote::create(['quote' => 'Cache Quote']);
-        $response = $this->get('/api/kayne/fresh?api_token='. $this->createToken());
+        $response = $this->get('/api/kayne/fresh?api_token='. $this->token);
         $response->assertStatus(200);
         $this->assertCount(5, json_decode($response->getContent()));
-    }
-
-    private function createToken(): string {
-        $token = Str::random(60);
-        ApiToken::create([ 'api_token' => hash('sha256', $token)]);
-        return $token;
     }
 }
