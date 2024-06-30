@@ -3,9 +3,6 @@
 namespace Tests\Unit;
 
 use App\Quote\Kayne;
-use App\Quote\Quote;
-use App\Quote\QuoteManager;
-use Illuminate\Container\Container;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
