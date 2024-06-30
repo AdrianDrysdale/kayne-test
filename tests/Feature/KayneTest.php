@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\ApiToken;
-use App\Models\Quote;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -53,5 +53,12 @@ class KayneTest extends TestCase
         $response = $this->get('/api/kayne/fresh?api_token=' . $this->token);
         $response->assertStatus(200);
         $this->assertCount(5, json_decode($response->getContent()));
+    }
+
+    public function testExceptionReturnsErrorMessage(): void
+    {
+        Http::fake(fn() => throw new ConnectionException('Connection timed out'));
+        $response = $this->get('/api/kayne?api_token=' . $this->token);
+        $response->assertStatus(503);
     }
 }

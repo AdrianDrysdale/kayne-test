@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -13,8 +14,14 @@ class Kayne extends Controller
             return Cache::get('quotes');
         }
 
-        for ($i = 1; $i <= 5; $i++) {
-            $quotes[] = Http::get(env('KAYNE_API'))->json()['quote'];
+        $quotes = [];
+
+        try {
+            for ($i = 1; $i <= 5; $i++) {
+                $quotes[] = Http::get(env('KAYNE_API'))->json()['quote'];
+            }
+        } catch(ConnectionException $ex) {
+            return response()->json(['error' => 'Failed to retrieve quotes'], 503);
         }
 
         Cache::put('quotes', $quotes, 180);
