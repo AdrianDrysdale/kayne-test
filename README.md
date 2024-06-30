@@ -3,9 +3,9 @@ Welcome to Kayne api.
 
 ### Prerequisites
 You must have the following set up on a machine
-* PHP
+* PHP 8.2 or higher
 * Mysql
-* Composer
+* Composer 2.x 
 * Git
 
 
