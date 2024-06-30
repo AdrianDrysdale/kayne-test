@@ -42,12 +42,6 @@ You can then spin up a server
 php artisan serve
 ```
 
-You can run the test suite via artisan by doing the following
-
-```shell
-php artisan test
-```
-
 ### Generating an access token
 To access the endpoints you will need  an access token. You can run the following artisan command to generate a token.
 
@@ -60,19 +54,19 @@ The output will contain the token you need to access the api similar to the foll
 Token: c7cduwIsObqH4mcP0dIoKMPlJn5hHvAupBIQiWAhwIpVpFlWoIwHka77IP6X
 ```
 
-**Note:** Running the test suite will wipe any tokens you generate.
-
 ### Using the application
 To access a list of five kayne quotes.
 
 ```shell
-http://127.0.0.1:8002/api/kayne?api_token=c7cduwIsObqH4mcP0dIoKMPlJn5hHvAupBIQiWAhwIpVpFlWoIwHka77IP6X```
+http://127.0.0.1:8000/api/kayne?api_token=c7cduwIsObqH4mcP0dIoKMPlJn5hHvAupBIQiWAhwIpVpFlWoIwHka77IP6X```
 ```
-**Note:** Replace api_token with the token you generated. You many need to replace http://127.0.0.1:8002 with the correct port
+**Note:** Replace api_token with the token you generated. You man need to replace http://127.0.0.1:8000 with the correct port
 
 Once you ran that endpoint once, any subsequent calls will only return a cached copy of the quotes it previously obtained.
 To obtain a fresh list of quotes
 
 ```shell
-http://127.0.0.1:8002/api/kayne/fresh?api_token=c7cduwIsObqH4mcP0dIoKMPlJn5hHvAupBIQiWAhwIpVpFlWoIwHka77IP6X```
+http://127.0.0.1:8000/api/kayne/fresh?api_token=c7cduwIsObqH4mcP0dIoKMPlJn5hHvAupBIQiWAhwIpVpFlWoIwHka77IP6X```
 ```
+
+**Note:** Running the test suite will wipe any tokens you generate and fill the quotes table with fake test data.
