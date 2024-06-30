@@ -16,7 +16,7 @@ class Kayne extends Controller
         }
 
         for ($i = 1; $i <= 5; $i++) {
-            $quote = Http::get('https://api.kanye.rest')->json()['quote'];
+            $quote = Http::get(env('KAYNE_API'))->json()['quote'];
             Quote::create(['quote' => $quote]);
             $quotes[] = $quote;
         }

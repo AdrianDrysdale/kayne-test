@@ -19,7 +19,7 @@ class KayneTest extends TestCase
     {
         parent::setUp();
         Http::fake([
-            'https://api.kanye.rest' => Http::sequence()
+            env('KAYNE_API') => Http::sequence()
                 ->push(['quote' => 'quote 1'])
                 ->push(['quote' => 'quote 2'])
                 ->push(['quote' => 'quote 3'])
