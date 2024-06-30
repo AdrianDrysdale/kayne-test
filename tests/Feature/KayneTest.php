@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\ApiToken;
 use App\Models\Quote;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -41,14 +42,14 @@ class KayneTest extends TestCase
 
     public function testQuotesAreCached(): void
     {
-        Quote::create(['quote' => 'Cache Quote']);
+        Cache::put('quotes', ['Cache Quote']);
         $response = $this->get('/api/kayne?api_token=' . $this->token);
         $this->assertEquals(['Cache Quote'], json_decode($response->getContent()));
     }
 
     public function testQuotesAreRefreshed(): void
     {
-        Quote::create(['quote' => 'Cache Quote']);
+        Cache::put('quotes', ['Cache Quote']);
         $response = $this->get('/api/kayne/fresh?api_token=' . $this->token);
         $response->assertStatus(200);
         $this->assertCount(5, json_decode($response->getContent()));

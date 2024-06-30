@@ -2,31 +2,28 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Quote;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 class Kayne extends Controller
 {
     public function index()
     {
-        $existingQuotes = Quote::all();
-
-        if ($existingQuotes->isNotEmpty()) {
-            return $existingQuotes->pluck('quote');
+        if (Cache::has('quotes')) {
+            return Cache::get('quotes');
         }
 
         for ($i = 1; $i <= 5; $i++) {
-            $quote = Http::get(env('KAYNE_API'))->json()['quote'];
-            Quote::create(['quote' => $quote]);
-            $quotes[] = $quote;
+            $quotes[] = Http::get(env('KAYNE_API'))->json()['quote'];
         }
 
+        Cache::put('quotes', $quotes, 180);
         return response()->json($quotes);
     }
 
     public function fresh()
     {
-        Quote::truncate();
+        Cache::flush();
         return $this->index();
     }
 }
