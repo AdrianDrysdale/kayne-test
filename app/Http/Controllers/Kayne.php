@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Quote\Quote;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 
 class Kayne extends Controller
 {
@@ -13,12 +13,8 @@ class Kayne extends Controller
             return Cache::get('quotes');
         }
 
-        $quotes = [];
-
         try {
-            for ($i = 1; $i <= 5; $i++) {
-                $quotes[] = Http::get(env('KAYNE_API'))->throw()->json()['quote'];
-            }
+            $quotes = Quote::driver('kayne')->quotes();
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to retrieve quotes'], 503);
         }
